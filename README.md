@@ -85,7 +85,7 @@ pip install -r requirements.txt
 # open project.ipynb and run all cells
 
 You can explore the full notebook output without running the code or Github can not run the code block:
-
+**Live HTML report:** [Open Report](https://bumbumlinh91.github.io/tiktok-project/project.html)
 
 ```
 
