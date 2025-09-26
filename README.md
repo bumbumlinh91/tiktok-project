@@ -67,8 +67,10 @@ Moderation teams need to **catch claims early** to route fact‑checking. Missin
 | Precision — Claim | 1.00 |
 | F1 — Opinion | 1.00 |
 
+The classification report above shows that the random forest model scores were perfect, but we know they weren't quite perfect. The confusion matrix indicates that there were 10 misclassifications&mdash;five false postives and five false negatives.
 
 Figure for random forest model:
+
 ![Confusion Matrix](images/confusion_matrix.png)
 
 ![Feaure importances](images/feature_importances.png)
@@ -84,7 +86,7 @@ pip install -r requirements.txt
 
 You can explore the full notebook output without running the code or Github can not run the code block:
 
-👉 [View Full Report (HTML)](https://bumbumlinh91.github.io/tiktok-project/claim-opinion.html)
+
 ```
 
 **Data expectation:** place a CSV at `data/tiktok_dataset.csv` with at least the schema above.  
@@ -109,14 +111,20 @@ tiktok-project/
 ```
 
 ## Limitations & Ethics
-- **Text‑only**: no audio/video cues — some context is lost.
-- **Domain drift**: language on TikTok changes fast; retrain periodically.
-- **Bias**: author metadata can encode demographic/behavioral bias — audit before production.
+- **Text + simple metadata only**: no audio/video features — some context is lost.
+- **Domain drift**: TikTok language shifts quickly; retrain/monitor regularly.
+- **Bias risk**: author metadata (e.g., `verified_status`, `author_ban_status`) can encode demographic/behavioral bias — audit before production.
+
 
 ## Next Steps
-- Replace n‑gram counts with lightweight transformer embeddings + distillation.
-- Active learning loop to mine **hard negatives** (borderline opinions).
-- Reviewer dashboard (Streamlit) to inspect predictions and false negatives.
+- **Validation for Recall(Claim)**: use `StratifiedKFold` (e.g., 5-fold) and report mean ± std of **Recall(Claim)**.
+- **Threshold tuning**: optimize decision threshold for **Recall(Claim)** under a precision/FPR constraint; add precision–recall curve.
+- **Calibration**: apply `CalibratedClassifierCV` (isotonic) for better confidence scores.
+- **Modeling**: replace n-gram counts with lightweight transformer embeddings (e.g., `distilbert-base-uncased`) or sentence embeddings + XGBoost; consider distillation for speed.
+- **Error analysis**: dedicated **false-negative** table for Claim; sample-wise review to refine preprocessing.
+- **Ops**: add a minimal Streamlit reviewer dashboard to inspect predictions and audit FN/FP.
 
 ## Credits
-Built by **Linh** — Data Analyst (Intern) candidate. Dataset: TikTok text + public engagement fields.
+Built by **Linh** — Data Analyst (Intern) candidate.  
+**Models:** XGBoost & Random Forest (main), Logistic Regression (baseline).  
+**Data:** TikTok text + public engagement fields (no audio/video; no PII committed).
